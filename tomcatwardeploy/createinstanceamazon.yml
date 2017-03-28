@@ -1,0 +1,56 @@
+---
+- name: create instance aws redhat
+  hosts: localhost
+  
+  roles:
+     - ec2
+     - lamp
+     
+- name: installing tomcat 
+  hosts: amazon
+  remote_user: ec2-user
+  become: yes
+  become_method: sudo
+  become_user: root
+  vars:
+     http_port: 8080
+     https_port: 8443
+     admin_username: admin
+     admin_password: adminsecret
+
+  roles:
+     - selinux
+     - tomcat
+     
+- name : installing mariadb-server
+  hosts: dbserver
+  remote_user: ec2-user
+  become: true
+  become_method: sudo
+  become_user: root
+  vars:
+     mysqlservice: mysqld
+     mysql_port: 3306
+     dbuser: admin
+     dbname: admin
+     upassword: password
+
+  roles:
+     - common
+     - db
+     
+- name: war deploy file
+  hosts: amazon
+  remote_user: ec2-user
+  become: True
+  become_method: sudo 
+  become_user: root
+  vars:
+     warname: firstwardeploy.war
+     warpath: /opt/apache-tomcat-7.0.61/webapps/
+     
+  roles:
+     - deploywar
+     
+     
+     

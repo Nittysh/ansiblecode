@@ -1,0 +1,21 @@
+---
+- name: Download the url file from github
+  get_url:
+        url: https://s3-us-west-2.amazonaws.com/traininghimanshu1/sample.war
+        dest: "{{ warpath }}/{{ warname }}"
+        mode: 0777
+  register: war_download
+  
+- name: set permissions
+  file: 
+     path: "{{ warpath }}/{{ warname }}"
+     owner: tomcat
+     group: tomcat
+  when: war_download.changed
+  register: war_deployed
+  
+- name: restart tomcat
+  service: 
+     name: tomcat
+     state: restarted
+  when: war_deployed.changed
