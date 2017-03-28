@@ -1,0 +1,10 @@
+---
+       
+- name: installs the dokcer 
+  shell: curl -fsSL https://get.docker.com | sh
+  
+
+  
+- name: initialize swarm node
+  shell: docker swarm join --token {{ hostvars['manageip']['ipmanage'] }} {{ hostvars['localhost']['swarmmanager'] }}:2377
+

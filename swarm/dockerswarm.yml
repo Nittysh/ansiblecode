@@ -1,0 +1,37 @@
+---
+
+- name: creates the ec2 instance and captures the ip 
+  hosts: localhost
+  roles:
+    - ec2
+    
+- name: installs the docker and runs the swarm command manager
+  hosts: ec2managerip
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: ubuntu
+  
+  roles:
+    - swarm
+
+- name: installs the docker and runs the swarm command on node 
+  hosts: ec2nodeip
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: ubuntu
+  
+  roles:
+    - node
+
+- name: Launch the conatiner and deploys the service
+  hosts: ec2managerip
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: ubuntu
+  
+  roles:
+    - createcontainer
+    

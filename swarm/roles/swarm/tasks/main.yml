@@ -1,0 +1,23 @@
+---
+
+       
+- name: installs the dokcer 
+  shell: curl -fsSL https://get.docker.com | sh
+
+- debug:
+    msg: " this is the ip:  {{ hostvars['localhost']['swarmmanager'] }}"
+- name: initialize swarm cluster
+  shell: >
+        docker swarm init
+        --advertise-addr={{ hostvars['localhost']['swarmmanager'] }}:2377
+ 
+- name: swarm token 
+  shell: docker swarm join-token --quiet worker
+  register: swarmtoken
+  
+- debug:
+    msg: "this is the {{ swarmtoken.stdout }}"
+
+- add_host:
+        name: manageip
+        ipmanage: "{{ swarmtoken.stdout }}"
