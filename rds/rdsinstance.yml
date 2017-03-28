@@ -1,0 +1,5 @@
+--- 
+- name: Creating an RDS Instance
+  hosts: localhost
+  roles:
+    - rds

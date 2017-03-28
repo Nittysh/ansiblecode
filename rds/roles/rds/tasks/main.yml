@@ -1,0 +1,20 @@
+- rds:
+    command: create
+    instance_name: new-database
+    db_engine: MySQL
+    size: 10
+    region: us-west-2
+    instance_type: db.t2.micro
+    username: mysql_admin
+    password: insecure
+    publicly_accessible: yes
+    tags:
+      Environment: testing
+      Application: cms
+    wait: yes
+    wait_timeout: 700
+  register: rds
+  
+- debug:
+      msg: "The new db endpoint is {{ rds.instance.endpoint }}"
+  
